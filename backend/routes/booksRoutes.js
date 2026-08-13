@@ -1,10 +1,35 @@
 import { Book } from '../models/bookmodel.js';
 import express from 'express';
 import { auth } from '../middleware/auth.js';
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
+
 const router = express.Router();
 
 // require authentication for all book routes
 router.use(auth);
+
+// multer storage config
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        const updir = path.join(process.cwd(), 'backend', 'uploads');
+        if (!fs.existsSync(updir)) fs.mkdirSync(updir, { recursive: true });
+        cb(null, updir);
+    },
+    filename: (req, file, cb) => {
+        const sanitized = file.originalname.replace(/\s+/g, '_');
+        cb(null, `${Date.now()}-${sanitized}`);
+    }
+});
+
+const upload = multer({
+    storage,
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype !== 'application/pdf') return cb(new Error('Only PDFs allowed'));
+        cb(null, true);
+    }
+});
 
 
 //Route for get all books from database
@@ -23,7 +48,7 @@ router.get('/', async(req,resp)=>{
 });
 
 //Route for Save a new book
-router.post('/',async(req,resp)=>{
+router.post('/', upload.single('pdf'), async(req,resp)=>{
     try{
         if(
             !req.body.title||
@@ -34,14 +59,21 @@ router.post('/',async(req,resp)=>{
                 message:'All fields (title,author,publishYear) are required!'
             });
         }
-        const newBook={
-            title: req.body.title,
-            author:req.body.author,
-            publishYear:req.body.publishYear,
-            owner: req.user._id,
-        };
-        
-        const book= await Book.create(newBook);
+                const newBook={
+                        title: req.body.title,
+                        author:req.body.author,
+                        publishYear:req.body.publishYear,
+                        owner: req.user._id,
+                };
+                if (req.file) {
+                    newBook.pdf = {
+                        filename: req.file.filename,
+                        originalName: req.file.originalname,
+                        mimeType: req.file.mimetype,
+                        size: req.file.size,
+                    };
+                }
+                const book= await Book.create(newBook);
         return resp.status(201).send(book);
         
     }
@@ -69,7 +101,7 @@ router.get('/:id', async(req,resp)=>{
 });
 
 //Route for updating a book
-router.put('/:id', async(req, resp) => {
+router.put('/:id', upload.single('pdf'), async(req, resp) => {
     try {
         const { id } = req.params;
 
@@ -83,8 +115,17 @@ router.put('/:id', async(req, resp) => {
             });
         }
 
-        const result = await Book.findOneAndUpdate(
-            { _id: id, owner: req.user._id }, req.body, { new: true });
+                const updatePayload = { ...req.body };
+                if (req.file) {
+                    updatePayload.pdf = {
+                        filename: req.file.filename,
+                        originalName: req.file.originalname,
+                        mimeType: req.file.mimetype,
+                        size: req.file.size,
+                    };
+                }
+                const result = await Book.findOneAndUpdate(
+                        { _id: id, owner: req.user._id }, updatePayload, { new: true });
 
         if (!result) {
             return resp.status(404).json({ message: 'Book not found' });
@@ -115,5 +156,24 @@ router.delete("/:id", async (req,resp)=>{
         return resp.status(500).send({message:error.message});
     }
 })
+
+// serve PDF for a book (authorized)
+router.get('/:id/pdf', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const book = await Book.findById(id);
+        if (!book) return res.status(404).json({ message: 'Book not found' });
+        if (!book.owner.equals(req.user._id)) return res.status(403).json({ message: 'Forbidden' });
+        if (!book.pdf || !book.pdf.filename) return res.status(404).json({ message: 'PDF not found' });
+        const filePath = path.join(process.cwd(), 'backend', 'uploads', book.pdf.filename);
+        if (!fs.existsSync(filePath)) return res.status(404).json({ message: 'File not found on server' });
+        res.type('application/pdf');
+        if (req.query.download) return res.download(filePath, book.pdf.originalName);
+        return res.sendFile(filePath);
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: err.message });
+    }
+});
 
 export default router;

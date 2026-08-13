@@ -1,3 +1,24 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root{
+	--bg: #f8fafc;
+	--text: #0f172a;
+	--card: #ffffff;
+}
+
+.dark{
+	--bg: #0b1220;
+	--text: #e6eef8;
+	--card: #0b1220;
+}
+
+body{
+	background-color: var(--bg);
+	color: var(--text);
+}
+
+.card-bg{
+	background-color: var(--card);
+}

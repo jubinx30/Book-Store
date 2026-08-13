@@ -17,6 +17,12 @@ const bookSchema=mongoose.Schema({
         ref: 'User',
         required: true,
     },
+    pdf: {
+        filename: { type: String },
+        originalName: { type: String },
+        mimeType: { type: String },
+        size: { type: Number },
+    },
 },   
     {
         timestamps:true,

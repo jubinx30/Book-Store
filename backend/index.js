@@ -5,6 +5,8 @@ import { Book } from './models/bookmodel.js';
 import booksRoute from './routes/booksRoutes.js';
 import authRoute from './routes/authRoutes.js';
 import cors from 'cors';
+import fs from 'fs';
+import path from 'path';
 
 
 const app=express();
@@ -12,6 +14,10 @@ const app=express();
 app.use(express.json());
 //middleware for cors
 app.use(cors());
+
+// ensure uploads directory exists
+const uploadsDir = path.join(process.cwd(), 'backend', 'uploads');
+if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 //custom cors middleware
 // app.use(
 //     cors({

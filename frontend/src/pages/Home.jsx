@@ -4,6 +4,7 @@ import api from "../api";
 import Spinner from "../components/Spinner";
 import { Link } from "react-router-dom";
 import LogoutButton from '../components/LogoutButton';
+import ThemeToggle from '../components/ThemeToggle';
 import { AiOutlineEdit } from "react-icons/ai";
 import { BsInfoCircle } from "react-icons/bs";
 import { MdOutlineAddBox, MdOutlineDelete } from "react-icons/md";
@@ -52,7 +53,10 @@ const Home = () => {
             <MdOutlineAddBox className="text-sky-800 text-4xl" />
           </Link>
           {localStorage.getItem('token') ? (
-            <LogoutButton />
+            <div className='flex items-center gap-2'>
+              <ThemeToggle />
+              <LogoutButton />
+            </div>
           ) : (
             <div className='flex items-center gap-2'>
               <Link to='/login' className='text-sky-700'>Login</Link>

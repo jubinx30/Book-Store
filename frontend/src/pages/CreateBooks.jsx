@@ -10,19 +10,20 @@ const CreateBooks = () => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [publishYear, setPublishYear] = useState("");
+  const [pdfFile, setPdfFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const {enqueueSnackbar}=useSnackbar();
   
   const handleSaveBook = () => {
-    const data = {
-      title,
-      author,
-      publishYear,
-    };
+    const form = new FormData();
+    form.append('title', title);
+    form.append('author', author);
+    form.append('publishYear', publishYear);
+    if (pdfFile) form.append('pdf', pdfFile);
     setLoading(true);
     api
-      .post('/books', data)
+      .post('/books', form, { headers: { 'Content-Type': 'multipart/form-data' } })
       .then(() => {
         setLoading(false);
         enqueueSnackbar('Book Created Successfully',{variant: 'success'})
@@ -69,6 +70,16 @@ const CreateBooks = () => {
             value={publishYear}
             onChange={(e) => setPublishYear(e.target.value)}
             className="border-2 border-gray-500 px-4 py-2 w-full"
+          />
+        </div>
+
+        <div className="my-4">
+          <label className="text-xl mr-4 text-gray-500">PDF (optional)</label>
+          <input
+            type="file"
+            accept="application/pdf"
+            onChange={(e) => setPdfFile(e.target.files[0])}
+            className="w-full"
           />
         </div>
 
