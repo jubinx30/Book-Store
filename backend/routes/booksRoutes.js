@@ -1,12 +1,16 @@
 import { Book } from '../models/bookmodel.js';
 import express from 'express';
-const router=express.Router();
+import { auth } from '../middleware/auth.js';
+const router = express.Router();
+
+// require authentication for all book routes
+router.use(auth);
 
 
 //Route for get all books from database
 router.get('/', async(req,resp)=>{
     try{
-        const books=await Book.find()
+        const books=await Book.find({ owner: req.user._id })
         return resp.status(200).json({
             count:books.length,
             data: books,
@@ -34,6 +38,7 @@ router.post('/',async(req,resp)=>{
             title: req.body.title,
             author:req.body.author,
             publishYear:req.body.publishYear,
+            owner: req.user._id,
         };
         
         const book= await Book.create(newBook);
@@ -50,11 +55,12 @@ router.post('/',async(req,resp)=>{
 router.get('/:id', async(req,resp)=>{
     try{
         const {id} =req.params;
-        const book=await Book.findById(id);
-        if(!book){
-             return resp.status(404).json({message:"Book not found"})
-        }
-        return resp.status(200).json(book)
+       const book=await Book.findById(id);
+       if(!book){
+           return resp.status(404).json({message:"Book not found"})
+       }
+       if (!book.owner.equals(req.user._id)) return resp.status(403).json({ message: 'Forbidden' });
+       return resp.status(200).json(book)
     }
     catch(error){
         console.log(error.message);
@@ -77,8 +83,8 @@ router.put('/:id', async(req, resp) => {
             });
         }
 
-        const result = await Book.findByIdAndUpdate(
-            id,req.body);
+        const result = await Book.findOneAndUpdate(
+            { _id: id, owner: req.user._id }, req.body, { new: true });
 
         if (!result) {
             return resp.status(404).json({ message: 'Book not found' });
@@ -98,10 +104,10 @@ router.put('/:id', async(req, resp) => {
 router.delete("/:id", async (req,resp)=>{
     try{
     const {id}=req.params;
-    const result = await Book.findByIdAndDelete(id);
+    const result = await Book.findOneAndDelete({ _id: id, owner: req.user._id });
 
     if(!result){
-        return resp.status(404).json({message:"Book not found."})
+        return resp.status(404).json({message:"Book not found or not owned by you."})
     }
     return resp.status(200).send({message:"book successfully deleted."})
     }
