@@ -6,12 +6,14 @@
 	--bg: #f8fafc;
 	--text: #0f172a;
 	--card: #ffffff;
+	--input-text: #0f172a;
 }
 
 .dark{
 	--bg: #0b1220;
 	--text: #e6eef8;
 	--card: #0b1220;
+	--input-text: #cbd5e1;
 }
 
 body{
@@ -21,4 +23,24 @@ body{
 
 .card-bg{
 	background-color: var(--card);
+}
+
+/* placeholder color: darker and theme-aware */
+:root{
+	--placeholder: rgba(15,23,42,0.6);
+}
+.dark{
+	--placeholder: rgba(230,238,248,0.6);
+}
+
+input::placeholder,
+textarea::placeholder,
+select::placeholder{
+	color: var(--placeholder);
+	opacity: 1; /* override browser default */
+}
+
+/* input text color stronger for readability */
+input, textarea, select, button {
+	color: var(--input-text);
 }

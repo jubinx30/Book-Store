@@ -27,9 +27,9 @@ const Signup = () => {
     <div className="p-4">
       <h1 className="text-3xl my-4">Signup</h1>
       <div className="flex flex-col border-2 border-sky-400 rounded-xl w-[600px] p-4 mx-auto">
-        <input className="m-2 p-2" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
-        <input className="m-2 p-2" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <input className="m-2 p-2" placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <input className="m-2 p-2 text-black dark:text-white" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
+        <input className="m-2 p-2 text-black dark:text-white" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <input className="m-2 p-2 text-black dark:text-white" placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         <button className="p-2 bg-sky-300 m-2" onClick={handleSignup}>Create account</button>
       </div>
     </div>

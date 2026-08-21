@@ -49,7 +49,7 @@ const CreateBooks = () => {
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="border-2 border-gray-500 px-4 py-2 w-full"
+            className="border-2 border-gray-500 px-4 py-2 w-full text-black dark:text-black"
           />
         </div>
 
@@ -59,7 +59,7 @@ const CreateBooks = () => {
             type="text"
             value={author}
             onChange={(e) => setAuthor(e.target.value)}
-            className="border-2 border-gray-500 px-4 py-2 w-full"
+            className="border-2 border-gray-500 px-4 py-2 w-full text-black dark:text-black"
           />
         </div>
 
@@ -69,7 +69,7 @@ const CreateBooks = () => {
             type="text"
             value={publishYear}
             onChange={(e) => setPublishYear(e.target.value)}
-            className="border-2 border-gray-500 px-4 py-2 w-full"
+            className="border-2 border-gray-500 px-4 py-2 w-full text-black dark:text-white"
           />
         </div>
 
