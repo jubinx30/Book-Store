@@ -86,13 +86,14 @@ router.post('/', upload.single('pdf'), async(req,resp)=>{
 //Route for getting a single book from database
 router.get('/:id', async(req,resp)=>{
     try{
+        console.log(req.params);
         const {id} =req.params;
-       const book=await Book.findById(id);
-       if(!book){
+        const book=await Book.findById(id);
+        if(!book){
            return resp.status(404).json({message:"Book not found"})
-       }
-       if (!book.owner.equals(req.user._id)) return resp.status(403).json({ message: 'Forbidden' });
-       return resp.status(200).json(book)
+        }
+        if (!book.owner.equals(req.user._id)) return resp.status(403).json({ message: 'Forbidden' });
+        return resp.status(200).json(book)
     }
     catch(error){
         console.log(error.message);
