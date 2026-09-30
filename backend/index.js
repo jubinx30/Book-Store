@@ -1,7 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import {PORT,mongoDBURL} from './config.js'
-import { Book } from './models/bookmodel.js';
 import booksRoute from './routes/booksRoutes.js';
 import authRoute from './routes/authRoutes.js';
 import cors from 'cors';

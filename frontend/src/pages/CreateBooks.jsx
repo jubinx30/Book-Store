@@ -69,7 +69,7 @@ const CreateBooks = () => {
             type="text"
             value={publishYear}
             onChange={(e) => setPublishYear(e.target.value)}
-            className="border-2 border-gray-500 px-4 py-2 w-full text-black dark:text-white"
+            className="border-2 border-gray-500 px-4 py-2 w-full text-black dark:text-black"
           />
         </div>
 
@@ -83,7 +83,7 @@ const CreateBooks = () => {
           />
         </div>
 
-        <button className="p-2 bg-sky-300 m-8" onClick={handleSaveBook}>
+        <button className="p-2 bg-sky-300 m-8 text-xl text-green-950" onClick={handleSaveBook}>
           Save
         </button>
       </div>

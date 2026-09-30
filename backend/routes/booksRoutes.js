@@ -86,7 +86,6 @@ router.post('/', upload.single('pdf'), async(req,resp)=>{
 //Route for getting a single book from database
 router.get('/:id', async(req,resp)=>{
     try{
-        console.log(req.params);
         const {id} =req.params;
         const book=await Book.findById(id);
         if(!book){
