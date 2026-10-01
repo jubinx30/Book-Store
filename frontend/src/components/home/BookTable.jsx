@@ -1,60 +1,63 @@
-import React from 'react'
 import { Link } from "react-router-dom";
 import { AiOutlineEdit } from "react-icons/ai";
 import { BsInfoCircle } from "react-icons/bs";
-import { MdOutlineAddBox, MdOutlineDelete } from "react-icons/md";
+import { MdOutlineDelete } from "react-icons/md";
+import ReadPdfButton from './ReadPdfButton';
 
 const BookTable = ({books}) => {
   return (
-    <table className="w-full border-separate border-spacing-2">
+    <div className="shelf-table-wrap">
+    <table className="shelf-table">
         <thead>
           <tr>
-            <th className="border border-slate-600 rounded-md">No</th>
-            <th className="border border-slate-600 rounded-md">Title</th>
-            <th className="border border-slate-600 rounded-md max-md:hidden">
+            <th>No</th>
+            <th>Title</th>
+            <th className="max-md:hidden">
               Author
             </th>
-            <th className="border border-slate-600 rounded-md max-md:hidden">
+            <th className="max-md:hidden">
               Publish Year
             </th>
-            <th className="border border-slate-600 rounded-md ">Operations</th>
+            <th>Operations</th>
           </tr>
         </thead>
         <tbody>
           {books.map((book, index) => (
-            <tr key={book._id} className="h-8">
-              <td className="border border-slate-700 rounded-md text-center">
+            <tr key={book._id}>
+              <td>
                 {index + 1}
               </td>
 
-              <td className="border border-slate-700 rounded-md text-center">
+              <td>
                 {book.title}
               </td>
 
-              <td className="border border-slate-700 rounded-md text-center max-md:hidden">
+              <td className="max-md:hidden">
                 {book.author}
               </td>
-              <td className="border border-slate-700 rounded-md text-center max-md:hidden">
+              <td className="max-md:hidden">
                 {book.publishYear}
               </td>
 
-              <td className="border border-slate-700 rounded-md text-center">
-                <div className="flex justify-center gap-x-4">
-                  <Link to={`/books/details/${book._id}`}>
+              <td>
+                <div className="shelf-table-actions">
+                  <Link to={`/books/details/${book._id}`} aria-label={`Details for ${book.title}`} title="Book details">
                     <BsInfoCircle className="text-2xl text-green-800" />
                   </Link>
-                  <Link to={`/books/edit/${book._id}`}>
+                  <Link to={`/books/edit/${book._id}`} aria-label={`Edit ${book.title}`} title="Edit book">
                     <AiOutlineEdit className="text-2xl text-yellow-600" />
                   </Link>
-                  <Link to={`/books/delete/${book._id}`}>
+                  <Link to={`/books/delete/${book._id}`} aria-label={`Delete ${book.title}`} title="Delete book">
                     <MdOutlineDelete className="text-2xl text-red-600" />
                   </Link>
+                  <ReadPdfButton book={book} />
                 </div>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+    </div>
   )
 }
 

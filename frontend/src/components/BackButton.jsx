@@ -1,16 +1,20 @@
 import React from 'react'
 import {Link} from 'react-router-dom';
 import { BsArrowLeft } from 'react-icons/bs';
+import ThemeToggle from './ThemeToggle';
 
-const BackButton = ({destination='/'}) => {
+const BackButton = ({destination='/library'}) => {
   return (
-    <div className='flex'>
+    <div className='shelf-page-toolbar'>
         <Link
         to={destination}
-        className='bg-sky-800 text-white px-4 py-1 rounded-lg w-fit'
+        className='shelf-back-button'
         >
-            <BsArrowLeft className='text-2xl' />
+            <BsArrowLeft />
+            <span>Back to library</span>
         </Link>
+        <Link className='shelf-toolbar-brand' to='/'>Book Nook</Link>
+        <ThemeToggle />
     </div>
   )
 }

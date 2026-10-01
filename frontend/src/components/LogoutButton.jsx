@@ -8,7 +8,7 @@ const LogoutButton = () => {
     navigate('/login');
   };
   return (
-    <button className="p-2 bg-red-400 text-white rounded" onClick={handleLogout}>
+    <button className="shelf-danger-button shelf-logout-button" onClick={handleLogout}>
       Logout
     </button>
   );

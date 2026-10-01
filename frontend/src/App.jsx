@@ -1,4 +1,3 @@
-import React from 'react'
 import {Routes,Route} from 'react-router-dom'
 import Home from './pages/Home';
 import CreateBook from './pages/CreateBooks'
@@ -8,11 +7,13 @@ import EditBook from './pages/EditBook'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import ProtectedRoute from './components/ProtectedRoute'
+import LandingPage from './pages/LandingPage'
 
 const App = () => {
   return (
     <Routes>
-      <Route path='/' element={<ProtectedRoute><Home/></ProtectedRoute>} />
+      <Route path='/' element={<LandingPage />} />
+      <Route path='/library' element={<ProtectedRoute><Home/></ProtectedRoute>} />
       <Route path='/login' element={<Login/>} />  
       <Route path='/signup' element={<Signup/>} />
       <Route path='/books/create' element={<ProtectedRoute><CreateBook/></ProtectedRoute>} />

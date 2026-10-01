@@ -5,7 +5,7 @@ import api from '../api';
 import {useNavigate, useParams} from 'react-router-dom'
 import { useSnackbar } from 'notistack';
 
-const deleteBook = () => {
+const DeleteBook = () => {
   const [loading,setLoading]=useState(false);
   const navigate=useNavigate();
   const {id}=useParams();
@@ -17,7 +17,7 @@ const deleteBook = () => {
       .then(()=>{
         setLoading(false);
         enqueueSnackbar('Book Deleted Successfully',{variant:'success'});
-        navigate('/')
+        navigate('/library')
       })
       .catch((error)=>{
         setLoading(false);
@@ -28,22 +28,25 @@ const deleteBook = () => {
   }
  
   return (
-    <div className='p-4'>
+    <main className='shelf-app-page'>
+      <div className='shelf-app-container'>
       <BackButton />
-      <h1 className='text-3xl my-4'>Delete Book</h1>
+      <h1 className='shelf-page-heading'>Remove a book</h1>
+      <p className='shelf-page-subtitle'>This will permanently remove the book from your collection.</p>
       {loading ? <Spinner /> : ''}
-      <div className='flex flex-col items-center border-2 border-sky-400 rounded-xl w-[600px] p-8 mx-auto'>
-        <h3 className='text-2xl'>Are You Sure You want to delete this book ?</h3>
+      <div className='shelf-form-panel shelf-delete-panel'>
+        <h2>Are you sure you want to delete this book?</h2>
       
         <button
-          className='p4 bg-red-600 text-white m-8 w-full'
+          className='shelf-danger-button'
           onClick={handleDeleteBook}
           >
             Yes, Delete it.
         </button>
       </div>
-    </div>
+      </div>
+    </main>
   )
 }
 
-export default deleteBook
+export default DeleteBook
