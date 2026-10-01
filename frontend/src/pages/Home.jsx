@@ -1,6 +1,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import api from "../api";
+import { jwtDecode } from "jwt-decode";
 import Spinner from "../components/Spinner";
 import { Link } from "react-router-dom";
 import LogoutButton from '../components/LogoutButton';
@@ -15,18 +16,28 @@ const Home = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showType, setShowType] = useState("table");
+  const [userName, setUserName] = useState("");
   useEffect(() => {
     setLoading(true);
-    api
-      .get('/books')
+    api.get('/books')
       .then((response) => {
         setBooks(response.data.data);
         setLoading(false);
-      })
-      .catch((error) => {
+      }).catch((error) => {
         console.log(error);
         setLoading(false);
       });
+
+    const token = localStorage.getItem("token");
+    if(!token) return;
+    try{
+        const decoded = jwtDecode(token);
+        console.log(decoded);
+        let user_name=decoded.name
+        setUserName(user_name)
+        }catch(err){
+          console.error("Invalid token",err);
+        }
   }, []);
   return (
     <div className="p-4">
@@ -48,7 +59,9 @@ const Home = () => {
 
       </div>
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl my-8">Books List</h1>
+         
+        <h1 className="text-4xl text-center my-8 ml-6">Welcome {userName}</h1>
+        
         <div className='flex items-center gap-4'>
           <Link to="/books/create">
             <MdOutlineAddBox className="text-sky-800 text-4xl" />
@@ -65,7 +78,8 @@ const Home = () => {
             </div>
           )}
         </div>
-      </div>
+    </div>
+    <h3 className="text-3xl text-center my-4">Books List</h3>
       {loading ? (
         <Spinner />
       ) : showType === "table" ? (
